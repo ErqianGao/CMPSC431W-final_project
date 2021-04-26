@@ -4,6 +4,7 @@
     <title>homepage</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
+<body>
 
 <h1>Welcome to Book Store!</h1>
 <?php
@@ -17,3 +18,7 @@ if (!isset($_SESSION['user'])){
     echo '<form class="dform" action="controller.php" method="post"><button name="logout" value="logout">Logout</button></form>';
     echo '<i><b> Hello '.$_SESSION['user'].'!</i></b>';
 }
+
+?>
+</body>
+</html>
