@@ -6,11 +6,11 @@ class database_controller
     public function __construct()
     {
         $servername = 'localhost';
-        $dbname = "project1_erqiangao";
+        $dbname = "project_erqiangao";
         $user = 'root';
         $password = '';
         try {
-            $this->DB = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $user, $password);
+            $this->DB = new PDO("mysql:host=$servername;dbname=$dbname", $user, $password);
             $this->DB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             echo ("connect successfully!");
         } catch (PDOException $e) {
@@ -25,12 +25,12 @@ class database_controller
 
     public function getBooks( $name ){
         if( $name == null ){
-            $stmt = $this->DB->prepare("SELECT * FROM books");
+            $stmt = $this->DB->prepare("SELECT * FROM books LIMIT 1000");
             $stmt->execture();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
         else{
-            $stmt = $this->DB->prepare("SELECT * FROM books WHERE (title LIKE '%$name%') OR (authors LIKE '%$name%') OR (isbn LIKE '%$name%')");
+            $stmt = $this->DB->prepare("SELECT * FROM books WHERE (title LIKE '%$name%') OR (authors LIKE '%$name%') OR (isbn LIKE '%$name%') LIMIT 1000");
             $stmt->execute();
             return $stmt->fetchALL(PDO::FETCH_ASSOC);
         }
@@ -47,13 +47,34 @@ class database_controller
         return $stmt->fetchALL(PDO::FETCH_ASSOC);
     }
 
-    public function createNewManager( $name, $password ){
-        $stmt = $this->DB->prepare( "INSERT INTO managers(login_name, password) VALUES ('$name', '$password')" );
+    public function newManager( $login_name, $password ){
+        $stmt = $this->DB->prepare( "INSERT INTO managers(login_name, password) VALUES ('$login_name', '$password')" );
         $stmt->execute();
     }
 
+    public function checkLoginName($login_name){
+        $stmt = $this->DB->prepare("SELECT * FROM users where login_name = '$login_name'");
+        $stmt->execute();
+        $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if(count($array) === 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function checkManager($login_name){
+        $stmt = $this->DB->prepare("SELECT * FROM managers where login_name = '$login_name'");
+        $stmt->execute();
+        $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if(count($array) === 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public function login($login_name, $password){
-        $stmt= $this->DB->prepare( "SELECT login_name, password FROM users WHERE login_name='".$login_name."'AND password='".$password."';");
+        $stmt= $this->DB->prepare( "SELECT login_name, password FROM users WHERE login_name='$login_name'AND password='$password'");
         $stmt->execute();
         $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($array)===0){
@@ -61,6 +82,22 @@ class database_controller
         }else{
             return true;
         }
+    }
+
+    public function loginManager($login_name, $password){
+        $stmt= $this->DB->prepare( "SELECT login_name, password FROM managers WHERE login_name='$login_name'AND password='$password'");
+        $stmt->execute();
+        $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (count($array)===0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public function newUser($login_name, $password){
+        $stmt = $this->DB->prepare( "INSERT INTO users(login_name, password) VALUES ('$login_name', '$password')");
+        $stmt->execute();
     }
 }
 

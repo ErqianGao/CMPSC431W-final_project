@@ -1,6 +1,3 @@
-/*
-Authors: Rick Mercer and Alan Yuan
-*/
 .Container {
 	width: 200px;
 	vertical-align: text-top;
@@ -10,8 +7,8 @@ Authors: Rick Mercer and Alan Yuan
 	margin: 10px;
 }
 
-.quoteContainer{
-	width: 220px;
+.bookContainer{
+	width: 200px;
 	vertical-align: text-top;
 	border: 2px black solid;
 	border-radius: 7px;
@@ -26,7 +23,7 @@ Authors: Rick Mercer and Alan Yuan
 	padding: 10px;
 }
 
-.dform{
+.default_form{
 	display:inline;
 }
 
