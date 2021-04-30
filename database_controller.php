@@ -183,6 +183,11 @@ class database_controller
         }
     }
 
+    public function newUser($login_name, $password){
+        $stmt = $this->DB->prepare( "INSERT INTO users(login_name, password) VALUES ('$login_name', '$password')");
+        $stmt->execute();
+    }
+
     public function searchBySale( $flag ){
         if( $flag == true ){
             $stmt = $this->DB->prepare("SELECT b.title, b.isbn, b.authors, sum(o.copies) AS sale FROM books b, orders o WHERE b.isbn = o.ISBN GROUP BY o.ISBN ORDER BY sum(o.copies) DESC LIMIT 100");
