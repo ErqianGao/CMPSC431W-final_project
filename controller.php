@@ -1,26 +1,52 @@
 <?php
 session_start ();
 
-require_once 'database_controller.php';
+include 'database_controller.php';
 
 $theDBA = new database_controller();
 
-if (isset ( $_GET ['todo'] ) && $_GET ['todo'] === 'getBooks') {
-    if( $_GET['name'] == null )
-    {
-        $arr = $theDBA->getBooks( $_GET['name'] );
+$_SESSION['database'] = $theDBA;
+
+
+if (isset($_POST['score'])){
+    unset($_SESSION['commentError']);
+    if ( $theDBA->checkComment( $_SESSION['user'], $_POST['isbn'] )){
+        $theDBA->newComment( $_SESSION['user'], $_POST['isbn'] ,$_POST['score'], $_POST['short_text'] );
+        header('location:search.php');
     }
-    else
-    {
-        $arr = $theDBA->getBooks( null );
+    else{
+        $_SESSION['commentError'] = 'you already have comment on this book';
+        header('location:addComment.php');
     }
-    echo showBooks($arr);
 }
 
 
+if (isset($_POST['update']) &&isset($_POST['isbn'])){
+    if ($_POST['update']==='increase'){
+        $theDBA->increase($_POST['login_name'], $_POST['isbn']);
+    }elseif ($_POST['update']==='decrease'){
+        $theDBA->decrease($_POST['login_name'], $_POST['isbn']);
+    }
+
+    header('location:search.php');
+}
+
+
+if(isset($_POST['title']) ){
+    unset($_SESSION['addBookError']);
+    if($theDBA->checkBook($_POST['title'],$_POST['isbn'],$_POST['isbn_13'])) {
+        $theDBA->newBook($_POST['title'], $_POST['authors'], $_POST['isbn'], $_POST['isbn_13'], $_POST['language_code'], $_POST['publication_date'], $_POST['publisher']);
+        header('location:managerPage.php');
+    }
+    else{
+        $_SESSION['addBookError'] = 'the book already exists';
+        header('location:addBook.php');
+    }
+}
+
 if (isset($_POST['loginUser']) && isset($_POST['loginPassword'])){
     unset($_SESSION['loginError']);
-    if ($theDBA->login($_POST['loginUser'],$_POST['loginPassword'])){
+    if ($theDBA->checkPassword($_POST['loginUser'],$_POST['loginPassword'])){
         $_SESSION['user']=$_POST['loginUser'];
         header('location:HomePage.php');
     }else{
@@ -63,34 +89,22 @@ if (isset($_POST['registerManager']) && isset($_POST['registerMPassword'])){
 }
 
 
-if (isset($_POST['update']) &&isset($_POST['ID'])){
-    if ($_POST['update']==='increase'){
-        $theDBA->increase($_POST['ID']);
-    }elseif ($_POST['update']==='decrease'){
-        $theDBA->decrease($_POST['ID']);
-    }else{
-        $theDBA->remove($_POST['ID']);
-    }
-    header('location:view.php');
-}
 
 if (isset($_POST['logout'])){
     session_destroy();
     header('location:HomePage.php');
 }
 
-
-function showBooks($arr){
-    $result = '';
-    foreach ( $arr as $book ) {
-        $result .= '<div class="quotesBox">';
-        $result .= '"' . $book ['book'] . '"<br>';
-        $result.=' <p class="author">--'.$book['author'].'<br></p>';
-        $result.=' <form action="controller.php" method="post">';
-        $result.='<input type="hidden" name="ID" value="'.$book['id'].'">';
-        $result.='<span id="rating"> '.$book['average_rating'].' </span>';
-        $result.='</form></div>';
+if( isset($_GET['todo']) && $_GET['todo'] == 'getComments'){
+    $r = $theDBA->checkCommentsExist($_GET['isbn']);
+    if( $r == false ) {
+        echo('no comments yet');
     }
-    return $result;
-};
+    else{
+        $comments = $theDBA->getComments($_GET['isbn']);
+        echo(showComments($comments));
+    }
+}
+
+
 ?>

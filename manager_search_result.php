@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>search_result</title>
+    <title>manager_search_result</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
 <div>
-    <a href="search.php"><button>new search</button></a>
+    <a href="managerSearch.php"><button>new search</button></a>
     <br><br><br><br>
 </div>
 

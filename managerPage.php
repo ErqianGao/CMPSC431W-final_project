@@ -16,6 +16,7 @@ if (!isset($_SESSION['manager'])){
 }
 else{
     echo '<a href="manager_register.php"><button>register a new manager</button></a>';
+    echo '<a href="addBook.php"><button>add a new book</button></a>';
     echo '<a href="HomePage.php"><button>Back</button></a>';
 }
 

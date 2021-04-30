@@ -12,13 +12,13 @@
 ?>
 
 <div class="Container">
-    <form class="default_form" autocomplete="off" action="manager_search_result.php" method="GET">
+    <form class="default_form" autocomplete="off" action="search_result.php" method="GET">
         <textarea name="name" placeholder="book's name or author's name or ISBN" rows="5" cols="20" required></textarea>
         <br>
         <input type="submit" value="Search">
     </form>
 
-    <a href="managerPage.php"><button>Back</button></a>
+    <a href="HomePage.php"><button>Back</button></a>
 </div>
 
 <div id="books"></div>
