@@ -14,7 +14,7 @@
 <?php
 include 'controller.php';
     $name = $_GET['name'];
-    $database = $_SESSION['database'];
+    $database = new database_controller();
     $arr = $database->getBooks( $name );
 
     if( count($arr) == 0){

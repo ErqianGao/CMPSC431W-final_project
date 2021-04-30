@@ -11,9 +11,9 @@
 
 
 <?php
-include 'controller.php';
+include 'database_controller.php';
     $name = $_GET['name'];
-    $database = $_SESSION['database'];
+    $database = new database_controller();
     $arr = $database->getBooks( $name );
 
     if( count($arr) == 0){
@@ -29,9 +29,9 @@ function showBooks($arr) {
         $result .= '<div class="commentContainer">';
         $result .= '"' . $book ['title'] . '"<br><br>';
         $result.=' --'.$book['authors'].'<br>';
-        $result.=' <form action="detail.php" method="post">';
+        $result.=' <form action="managerDetail.php" method="post">';
         $result.=' <input type="hidden" name="isbn" value="'.$book ['isbn'].'" > ';
-        $result.=' <button name="check" value="check_detail">check detail and comments</button><br><br><br><br>';
+        $result.=' <button name="check" value="check_detail">change stock level</button><br><br><br><br>';
         $result.='</form></div>';
     }
     return $result;

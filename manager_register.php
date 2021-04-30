@@ -11,7 +11,7 @@ session_start();
 
 <h3>Manager Register</h3>
 <div class="Container">
-    <form class="dform" autocomplete="off"  action="controller.php" method="post">
+    <form class="default_form" autocomplete="off"  action="controller.php" method="post">
         <input type="text" name="registerManager" placeholder='login name' required>
         <br>
         <input type="password" name="registerMPassword" placeholder='password' required>

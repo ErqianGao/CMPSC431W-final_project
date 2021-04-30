@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Login</title>
@@ -11,10 +12,10 @@ session_start();
 <h3>Login</h3>
 
 <div class="Container">
-    <form class="default_form" autocomplete="off"  action="controller.php" method="post">
+    <form class="default_form" autocomplete="off" action="controller.php" method="post">
         <input type="text" name="loginUser" placeholder='your login name' required>
         <br>
-        <input type="password" name="loginPassword" placeholder='Password' required>
+        <input type="password" name="loginPassword" placeholder='your password' required>
         <br><br>
         <input type="submit" value="Login">
     </form>

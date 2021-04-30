@@ -7,21 +7,41 @@
 <body>
 
 <div>
-    <a href="search.php"><button>new search</button></a>
+    <a href="search_result.php"><button>back</button></a>
     <br><br><br><br>
 </div>
 
 <?php
 include 'controller.php';
-    $database = $_SESSION['database'];
+    $database = new database_controller();
     $arr = $database->getBookByISBN( $_POST['isbn']);
     echo(showDetail($arr));
     echo( '<br><br><br><br><br>' );
-    $isbn = $_POST['isbn'];
 ?>
 
 <div>
-    <a href="addComment.php"><button>add your own comment</button></a>
+    <form class="default_form" autocomplete="off" action="detail.php" method="POST">
+        <input type="number" name="number" placeholder="copies you want to buy" required>
+        <input type="hidden" name="isbn" value="<?php echo $_POST['isbn'] ?>">
+        <br>
+        <input type="submit" value="order">
+    </form>
+
+    <a href="HomePage.php"><button>Back</button></a><br><br>
+</div>
+
+<?php
+if(isset($_POST['number'])){
+    $database->placeOrder( $_SESSION['user'], $_POST['isbn'], $_POST['number']);
+    header('location:HomePage.php');
+}
+?>
+
+<div>
+    <form class="default_form" autocomplete="off" action="addComment.php" method="POST">
+        <input type="hidden" name="isbn" value="<?php echo $_POST['isbn'] ?>">
+        <input type="submit" value="add your own comment">
+    </form>
 </div>
 
 
@@ -77,6 +97,10 @@ function showDetail($arr) {
     }
     return $result;
 }
+
+
+
+
 ?>
 
 </body>

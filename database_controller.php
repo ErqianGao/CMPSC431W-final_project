@@ -22,11 +22,32 @@ class database_controller
         $conn = NULL;
     }
 
-    /**public function test(){
-        $stmt = $this->DB->prepare("SELECT * FROM books LIMIT 1000");
-        $stmt->execture();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }*/
+
+    public function placeOrder( $login_name, $isbn, $copy ){
+        $stmt = $this->DB->prepare( "SELECT * FROM books WHERE isbn = '$isbn' ");
+        $stmt->execute();
+        $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($arr[0]['stock'] < $copy ){
+            return false;
+        }
+        else {
+            $stmt = $this->DB->prepare("SELECT * FROM orders WHERE login_name = '$login_name' AND isbn = '$isbn' ");
+            $stmt->execute();
+            $arr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if (count($arr) == 0) {
+                $stmt = $this->DB->prepare("INSERT INTO orders(login_name, isbn, copies ) VALUES ('$login_name', '$isbn', '$copy' ) ");
+                $stmt->execute();
+            } else {
+                $stmt = $this->DB->prepare("UPDATE orders SET copies = copies + '$copy' WHERE login_name = '$login_name' AND isbn = '$isbn' ");
+                $stmt->execute();
+            }
+            $stmt = $this->DB->prepare("UPDATE books SET stock = stock - '$copy' WHERE isbn = '$isbn' ");
+            $stmt->execute();
+        }
+
+    }
+
 
     public function getBooks( $name ){
         $stmt = $this->DB->prepare("SELECT * FROM books WHERE ( UPPER(title) LIKE UPPER('%$name%') ) OR ( UPPER(authors) LIKE UPPER('%$name%') ) OR (isbn LIKE '%$name%') LIMIT 1000");
@@ -75,6 +96,17 @@ class database_controller
         }
     }
 
+    public function update_stock( $isbn, $number ){
+        $stmt = $this->DB->prepare( "UPDATE books SET stock = '$number' WHERE isbn = '$isbn' ");
+        $stmt->execute();
+    }
+
+    public function getOrders( $login_name ){
+        $stmt = $this->DB->prepare( "SELECT b.title, o.ISBN, o.copies FROM books b, orders o WHERE b.isbn = o.ISBN AND o.login_name = '$login_name' ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
 
     public function checkCommentsExist($isbn ){
         $stmt = $this->DB->prepare("SELECT * FROM comments WHERE isbn = '$isbn'");
@@ -151,9 +183,17 @@ class database_controller
         }
     }
 
-    public function newUser($login_name, $password){
-        $stmt = $this->DB->prepare( "INSERT INTO users(login_name, password) VALUES ('$login_name', '$password')");
-        $stmt->execute();
+    public function searchBySale( $flag ){
+        if( $flag == true ){
+            $stmt = $this->DB->prepare("SELECT b.title, b.isbn, b.authors, sum(o.copies) AS sale FROM books b, orders o WHERE b.isbn = o.ISBN GROUP BY o.ISBN ORDER BY sum(o.copies) DESC LIMIT 100");
+            $stmt->execute();
+        }
+        else{
+            $stmt = $this->DB->prepare("SELECT b.title, b.isbn, b.authors, sum(o.copies) AS sale FROM books b, orders o WHERE b.isbn = o.ISBN GROUP BY o.ISBN ORDER BY sum(o.copies) ASC LIMIT 100");
+            $stmt->execute();
+        }
+        $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $array;
     }
 }
 

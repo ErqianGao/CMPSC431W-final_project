@@ -1,25 +1,27 @@
 <?php
 session_start ();
 
-include 'database_controller.php';
+require_once 'database_controller.php';
 
 $theDBA = new database_controller();
 
-$_SESSION['database'] = $theDBA;
+
+
+
+
 
 
 if (isset($_POST['score'])){
     unset($_SESSION['commentError']);
     if ( $theDBA->checkComment( $_SESSION['user'], $_POST['isbn'] )){
         $theDBA->newComment( $_SESSION['user'], $_POST['isbn'] ,$_POST['score'], $_POST['short_text'] );
-        header('location:search.php');
+        header('location:detail.php');
     }
     else{
         $_SESSION['commentError'] = 'you already have comment on this book';
         header('location:addComment.php');
     }
 }
-
 
 if (isset($_POST['update']) &&isset($_POST['isbn'])){
     if ($_POST['update']==='increase'){
@@ -30,7 +32,6 @@ if (isset($_POST['update']) &&isset($_POST['isbn'])){
 
     header('location:search.php');
 }
-
 
 if(isset($_POST['title']) ){
     unset($_SESSION['addBookError']);
@@ -50,11 +51,10 @@ if (isset($_POST['loginUser']) && isset($_POST['loginPassword'])){
         $_SESSION['user']=$_POST['loginUser'];
         header('location:HomePage.php');
     }else{
-        $_SESSION['loginError']='The username or password is incorrect';
+        $_SESSION['loginError']='The login name or password is incorrect';
         header('location:login.php');
     }
 }
-
 
 if (isset($_POST['registerLoginName']) && isset($_POST['registerPassword'])){
     unset($_SESSION['registrationError']);
@@ -71,10 +71,10 @@ if (isset($_POST['loginManager']) && isset($_POST['loginMPassword'])){
     unset($_SESSION['loginMError']);
     if ($theDBA->loginManager($_POST['loginManager'],$_POST['loginMPassword'])){
         $_SESSION['manager']=$_POST['loginManager'];
-        header('location:managerPage.php');
+        header('location:HomePage.php');
     }else{
         $_SESSION['loginMError']='The login name or password is incorrect';
-        header('location:managerLogin.php');
+        header('location:login.php');
     }
 }
 
@@ -91,10 +91,12 @@ if (isset($_POST['registerManager']) && isset($_POST['registerMPassword'])){
 
 
 
+
 if (isset($_POST['logout'])){
     session_destroy();
     header('location:HomePage.php');
 }
+
 
 
 ?>

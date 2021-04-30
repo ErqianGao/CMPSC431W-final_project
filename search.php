@@ -6,7 +6,6 @@
 <body>
 <h1>Search for a book!</h1>
 <?php session_start();
-    $_GET['todo'] = 'getBooks';
 ?>
 
 <div class="Container">
