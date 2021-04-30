@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>manager_search_result</title>

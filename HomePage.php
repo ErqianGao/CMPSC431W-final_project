@@ -10,6 +10,7 @@
 <?php
 session_start();
 
+
 if (!isset($_SESSION['user'])&&!isset($_SESSION['manager'])){
     echo '<a href="register.php"><button>Register</button></a> ';
     echo '<a href="login.php"><button>Login</button></a>';

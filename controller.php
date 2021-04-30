@@ -50,10 +50,11 @@ if (isset($_POST['loginUser']) && isset($_POST['loginPassword'])){
         $_SESSION['user']=$_POST['loginUser'];
         header('location:HomePage.php');
     }else{
-        $_SESSION['loginError']='The login name or password is incorrect';
+        $_SESSION['loginError']='The username or password is incorrect';
         header('location:login.php');
     }
 }
+
 
 if (isset($_POST['registerLoginName']) && isset($_POST['registerPassword'])){
     unset($_SESSION['registrationError']);
@@ -70,10 +71,10 @@ if (isset($_POST['loginManager']) && isset($_POST['loginMPassword'])){
     unset($_SESSION['loginMError']);
     if ($theDBA->loginManager($_POST['loginManager'],$_POST['loginMPassword'])){
         $_SESSION['manager']=$_POST['loginManager'];
-        header('location:HomePage.php');
+        header('location:managerPage.php');
     }else{
         $_SESSION['loginMError']='The login name or password is incorrect';
-        header('location:login.php');
+        header('location:managerLogin.php');
     }
 }
 
@@ -93,17 +94,6 @@ if (isset($_POST['registerManager']) && isset($_POST['registerMPassword'])){
 if (isset($_POST['logout'])){
     session_destroy();
     header('location:HomePage.php');
-}
-
-if( isset($_GET['todo']) && $_GET['todo'] == 'getComments'){
-    $r = $theDBA->checkCommentsExist($_GET['isbn']);
-    if( $r == false ) {
-        echo('no comments yet');
-    }
-    else{
-        $comments = $theDBA->getComments($_GET['isbn']);
-        echo(showComments($comments));
-    }
 }
 
 
